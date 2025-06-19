@@ -3,11 +3,11 @@ FROM node:18-alpine
 WORKDIR /app
 
 COPY ./frontend/package.json ./
-COPY ./frontend/package-lock.json ./  # optional
+COPY ./frontend/package-lock.json ./  
 
 RUN npm install
 
-COPY ./frontend .  # ⬅️ now copy rest of the frontend code
+COPY ./frontend .  
 
 CMD ["npm", "start"]
 EXPOSE 3000
