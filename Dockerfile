@@ -1,7 +1,10 @@
-# Simple Node.js or React app
 FROM node:18-alpine
+
 WORKDIR /app
-COPY . .
+
+COPY frontend/ .     # 👈 only copy files from frontend
+
 RUN npm install
+
 CMD ["npm", "start"]
 EXPOSE 3000
