@@ -2,62 +2,42 @@ pipeline {
     agent any
 
     environment {
-        COMPOSE_PROJECT_NAME = 'simplebookstore'
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub') // Jenkins credentials ID
+        IMAGE_NAME = 'codenameab/simplebookstore' // <-- replace with your DockerHub username
     }
 
     stages {
-        stage('Checkout Code') {
+        stage('Clone Repository') {
             steps {
-                checkout scm
+                git 'https://github.com/xAbdullahShaikh/simplebookstore.git'
             }
         }
 
-        stage('Build Images') {
+        stage('Build Docker Image') {
             steps {
-                script {
-                    sh 'docker-compose build'
-                }
+                sh 'docker build -t $IMAGE_NAME .'
             }
         }
 
-        stage('Start Services') {
+        stage('Login to DockerHub') {
             steps {
-                script {
-                    sh 'docker-compose up -d'
-                }
+                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
             }
         }
 
-        stage('Smoke Test Backend') {
+        stage('Push Docker Image') {
             steps {
-                script {
-                    // adjust the port below if needed (default: 5000)
-                    sh 'curl -s http://localhost:5000 || echo "Backend not reachable!"'
-                }
-            }
-        }
-
-        stage('Smoke Test Frontend') {
-            steps {
-                script {
-                    // adjust the port below if needed (default: 3000)
-                    sh 'curl -s http://localhost:3000 || echo "Frontend not reachable!"'
-                }
-            }
-        }
-
-        stage('Stop Services') {
-            steps {
-                script {
-                    sh 'docker-compose down'
-                }
+                sh 'docker push $IMAGE_NAME'
             }
         }
     }
 
     post {
-        always {
-            echo 'Pipeline execution completed.'
+        success {
+            echo 'Docker image built and pushed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed.'
         }
     }
 }
