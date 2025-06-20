@@ -2,14 +2,18 @@ pipeline {
     agent any
 
     environment {
-        DOCKERHUB_CREDENTIALS = credentials('dockerhub') // Jenkins Credentials ID
-        IMAGE_NAME = 'codenameab/simplebookstore'
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub') // Jenkins credentials ID
+        BOOK_IMAGE = 'codenameab/bookservice'
+        ORDER_IMAGE = 'codenameab/orderservice'
+        FRONTEND_IMAGE = 'codenameab/simplebookstore'
     }
 
     stages {
-        stage('Build Docker Image') {
+        stage('Build Docker Images') {
             steps {
-                bat 'docker build -t %IMAGE_NAME% .'
+                bat 'docker build -t %BOOK_IMAGE% backend\\bookservice'
+                bat 'docker build -t %ORDER_IMAGE% backend\\orderservice'
+                bat 'docker build -t %FRONTEND_IMAGE% frontend'
             }
         }
 
@@ -21,19 +25,21 @@ pipeline {
             }
         }
 
-        stage('Push Docker Image') {
+        stage('Push Docker Images') {
             steps {
-                bat 'docker push %IMAGE_NAME%'
+                bat 'docker push %BOOK_IMAGE%'
+                bat 'docker push %ORDER_IMAGE%'
+                bat 'docker push %FRONTEND_IMAGE%'
             }
         }
     }
 
     post {
         success {
-            echo '✅ Docker image built and pushed successfully!'
+            echo '✅ All Docker images built and pushed successfully!'
         }
         failure {
-            echo '❌ Pipeline failed.'
+            echo '❌ Pipeline failed. Check logs for details.'
         }
     }
 }
