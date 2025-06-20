@@ -11,17 +11,15 @@ pipeline {
     stages {
         stage('Build Docker Images') {
             steps {
-                bat 'docker build -t %BOOK_IMAGE% backend\\bookservice'
-                bat 'docker build -t %ORDER_IMAGE% backend\\orderservice'
+                bat 'docker build -t %BOOK_IMAGE% backend/bookservice'
+                bat 'docker build -t %ORDER_IMAGE% backend/orderservice'
                 bat 'docker build -t %FRONTEND_IMAGE% frontend'
             }
         }
 
         stage('Login to DockerHub') {
             steps {
-                bat '''
-                echo %DOCKERHUB_CREDENTIALS_PSW% | docker login -u %DOCKERHUB_CREDENTIALS_USR% --password-stdin
-                '''
+                bat 'echo %DOCKERHUB_CREDENTIALS_PSW% | docker login -u %DOCKERHUB_CREDENTIALS_USR% --password-stdin'
             }
         }
 
