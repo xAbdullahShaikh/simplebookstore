@@ -11,8 +11,8 @@ pipeline {
     stages {
         stage('Build Docker Images') {
             steps {
-                bat 'docker build -t %BOOK_IMAGE% backend/bookservice'
-                bat 'docker build -t %ORDER_IMAGE% backend/orderservice'
+                bat 'docker build -t %BOOK_IMAGE% backened/bookservice'
+                bat 'docker build -t %ORDER_IMAGE% backened/orderservice'
                 bat 'docker build -t %FRONTEND_IMAGE% frontend'
             }
         }
