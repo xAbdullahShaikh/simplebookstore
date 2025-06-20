@@ -16,4 +16,4 @@ spec:
       - name: frontend
         image: codenameab/simplebookstore
         ports:
-        - containerPort: 3000
+        - containerPort: 5173
