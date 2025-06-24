@@ -16,4 +16,4 @@ spec:
       - name: bookservice
         image: codenameab/bookservice
         ports:
-        - containerPort: 3001
+        - containerPort: 3000
