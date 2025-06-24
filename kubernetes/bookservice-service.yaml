@@ -9,5 +9,5 @@ spec:
   ports:
     - protocol: TCP
       port: 80            # internal service port
-      targetPort: 3001    # container port
+      targetPort: 3000    # container port
       nodePort: 30082     # <-- change to a free port (30000-32767)
